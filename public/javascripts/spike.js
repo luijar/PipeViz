@@ -37,8 +37,8 @@ require(['d3'], function(d3) {
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
             .append("text")
-                .attr("x", width - 10)
-                .attr("dy", ".71em")
+                .attr("x", width)
+                .attr("dy", "3em")
                 .style("text-anchor", "end")
                 .text("Enviroments");
 
@@ -46,9 +46,11 @@ require(['d3'], function(d3) {
         .attr("class", "y axis")
         .call(yAxis)
             .append("text")
-                .attr("transform", "rotate(-90)")
+                .attr("x", -40)
+                .attr("x", -40)
                 .attr("y", 0)
-                .attr("dy", ".71em")
+                .attr("dy", "1em")
+                .attr("dx", "3em")
                 .style("text-anchor", "end")
                 .text("Builds");
 
