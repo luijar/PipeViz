@@ -1,42 +1,68 @@
 require(['d3'], function(d3) {
-    var data = [4, 8, 15, 16, 23, 42];
-
-    stages = {
-        'DEV' : 25,
-        'QA'  : 50,
-        'UAT' : 75,
-        'PROD': 100
-    };
 
     var data = [
-        {name: "1.0.0",    value:  'DEV'},
-        {name: "2.0.0",    value:  'PROD'}
+        {pos: 1, name: "1.0.0",    value:  'DEV'},
+        {pos: 2, name: "2.0.0",    value:  'UAT'},
+        {pos: 3, name: "3.0.0",    value:  'PROD'},
     ];
 
-    var width = 420,
-        barHeight = 20;
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = 760 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
 
-    var x = d3.scale.linear()
-        .domain([0, d3.max(data, function(d) { return stages[d.value]; })])
-        .range([0, width]);
+    var x = d3.scale.ordinal()
+        .domain(["DEV", "QA", "UAT", "PROD"])
+        .rangeBands([0, width]);
+
+    var y = d3.scale.ordinal()
+        .domain(data.map(function(d) { return d.name; }))
+        .rangeBands([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
 
     var chart = d3.select(".chart")
-        .attr("width", width)
-        .attr("height", barHeight * data.length);
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var bar = chart.selectAll("g")
+    chart.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+            .append("text")
+                .attr("x", width - 10)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Enviroments");
+
+    chart.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+            .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Builds");
+
+    chart.selectAll(".bar")
         .data(data)
-        .enter().append("g")
-        .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+        .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", 0)
+            .attr("y", function(d) { return fixType(y(d.name)) + 30; })
+            .attr("height", 20)
+            .attr("width", function(d) { return x(d.value) + 80; });
 
-    bar.append("rect")
-        .attr("width", function(d) { return x(stages[d.value]); })
-        .attr("height", barHeight - 1);
-
-    bar.append("text")
-        .attr("x", function(d) { return x(stages[d.value]) - 3; })
-        .attr("y", barHeight / 2)
-        .attr("dy", ".35em")
-        .text(function(d) { return d.name; });
-
+    function fixType(d) {
+        d.value = +d.value; // coerce to number
+        return d;
+    }
 });
