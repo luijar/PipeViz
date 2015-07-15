@@ -3,5 +3,14 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+
+    //- setup modules
+    script(src='/javascripts/require.js')
+    script(src='/javascripts/mods.js')
+
+    //- include any page-specific scripts
+    block scripts
   body
+
+
     block content
