@@ -6,6 +6,7 @@ block scripts
 
 block content
     //h1= title
-    h1 ECC Deployments
-    svg(class="chart")
 
+    each val in ['ecc', 'demo', 'support']
+        h1='Project Key: ' + val
+        svg(id=val+"-chart", env=val, class="chart")
