@@ -1,3 +1,7 @@
+const dev = 'DEV';
+const uat = 'UAT';
+const prod = 'PROD';
+
 require(['d3'], function(d3) {
 
     var data = [
@@ -61,7 +65,19 @@ require(['d3'], function(d3) {
             .attr("x", 0)
             .attr("y", function(d) { return fixType(y(d.name)) + 30; })
             .attr("height", 20)
-            .attr("width", function(d) { return x(d.value) + 80; });
+            .attr("width", 0)
+                .transition()
+                .attr("width", function(d) { return x(d.value) + 80; })
+                .attr("env", function(d) { return d.value; })
+                .duration(1000) // this is 1s;
+                .delay(100)
+                .ease("elastic").each("end", function () {
+                    var b = d3.select(this);
+                    if(b.attr("env") === prod) {
+                        b.style("fill", "steelblue");
+                    }
+                })
+        ;
 
     function fixType(d) {
         d.value = +d.value; // coerce to number
