@@ -8,6 +8,12 @@
   text-anchor: end;
 }
 
+.chart > g > text{
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
 .axis text {
   font: 10px sans-serif;
 }

@@ -83,15 +83,28 @@ require(['d3'], function(d3) {
             .attr("y", function(d) { return fixType(y(d.name)) + 30; })
             .attr("height", 20)
             .attr("width", 0)
+            .on("click", function () {
+                alert('d');
+            })
             .transition()
             .attr("width", function(d) { return x(d.value) + 80; })
             .attr("env", function(d) { return d.value; })
+            .attr("project", env)
             .duration(1000) // this is 1s;
             .delay(100)
             .ease("elastic").each("end", function () {
                 var b = d3.select(this);
+                var rect = d3.select(this.parentNode);
                 if(b.attr("env") === prod) {
                     b.style("fill", "steelblue");
+                    rect.append("svg:text").
+                        attr("x", b.attr("width")).
+                        attr("y", b.attr("height")).
+                        attr("dx", -11).
+                        attr("dy", "2.5em").
+                        attr("class", "barText").
+                        text('Build is live!').
+                        attr("fill", "white");
                 }
             })
         ;
